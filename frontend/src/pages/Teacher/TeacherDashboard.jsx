@@ -4,7 +4,6 @@ import Card from '../../components/Card';
 import Button from '../../components/Button';
 import Timer from '../../components/Timer';
 import { usePollTimer } from '../../hooks/usePollTimer';
-import './TeacherDashboard.css';
 
 const TeacherDashboard = ({ socket }) => {
   const { activePoll, results } = useSelector((state) => state.poll);
@@ -19,29 +18,37 @@ const TeacherDashboard = ({ socket }) => {
   const totalVotes = results?.totalVotes || 0;
 
   return (
-    <div className="teacher-dashboard">
-      <div className="dashboard-header">
+    <div className="min-h-screen px-5 py-10 bg-gray-50">
+      <div className="flex justify-end max-w-3xl mx-auto mb-8">
         <Button variant="outline" onClick={() => socket.emit('poll:history')}>
           👁️ View Poll history
         </Button>
       </div>
 
-      <div className="dashboard-content">
-        <h2 className="section-label">Question</h2>
+      <div className="max-w-3xl mx-auto">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Question</h2>
         
-        <Card className="question-card">
-          <p className="question-text">{activePoll.question}</p>
+        <Card className="mb-8 bg-gray-700">
+          <p className="text-white text-base leading-relaxed">{activePoll.question}</p>
         </Card>
 
-        <div className="tabs">
+        <div className="flex gap-0.5 mb-6 border-b-2 border-gray-200">
           <button
-            className={`tab ${activeTab === 'chart' ? 'tab-active' : ''}`}
+            className={`px-6 py-3 bg-transparent border-none text-base font-medium transition-all duration-300 border-b-2 -mb-0.5 ${
+              activeTab === 'chart' 
+                ? 'text-primary border-primary' 
+                : 'text-gray-500 border-transparent'
+            }`}
             onClick={() => setActiveTab('chart')}
           >
             Chat
           </button>
           <button
-            className={`tab ${activeTab === 'participants' ? 'tab-active' : ''}`}
+            className={`px-6 py-3 bg-transparent border-none text-base font-medium transition-all duration-300 border-b-2 -mb-0.5 ${
+              activeTab === 'participants' 
+                ? 'text-primary border-primary' 
+                : 'text-gray-500 border-transparent'
+            }`}
             onClick={() => setActiveTab('participants')}
           >
             Participants
@@ -49,25 +56,23 @@ const TeacherDashboard = ({ socket }) => {
         </div>
 
         {activeTab === 'chart' && results && (
-          <div className="results-container">
+          <div className="mb-8">
             {activePoll.options.map((option, index) => {
               const result = results.results?.[index];
               const percentage = result?.percentage || 0;
               
               return (
-                <div key={index} className="result-bar-wrapper">
-                  <div className="result-bar">
-                    <div className="result-info">
-                      <span className="result-icon">
-                        {String.fromCharCode(9679)}
-                      </span>
-                      <span className="result-text">{option.text}</span>
+                <div key={index} className="mb-6">
+                  <div className="flex justify-between items-center mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-primary text-xl">●</span>
+                      <span className="text-base text-gray-700 font-medium">{option.text}</span>
                     </div>
-                    <span className="result-percentage">{percentage}%</span>
+                    <span className="text-base font-semibold text-gray-900">{percentage}%</span>
                   </div>
-                  <div className="progress-bar">
+                  <div className="h-2 bg-gray-200 rounded overflow-hidden">
                     <div
-                      className="progress-fill"
+                      className="h-full bg-primary transition-all duration-500"
                       style={{ width: `${percentage}%` }}
                     />
                   </div>
@@ -78,16 +83,16 @@ const TeacherDashboard = ({ socket }) => {
         )}
 
         {activeTab === 'participants' && (
-          <Card className="participants-card">
-            <div className="participants-header">
-              <span className="participants-label">Name</span>
-              <span className="participants-label">Action</span>
+          <Card className="mb-8">
+            <div className="grid grid-cols-[1fr_auto] pb-4 border-b border-gray-200 mb-4">
+              <span className="text-sm font-semibold text-gray-500">Name</span>
+              <span className="text-sm font-semibold text-gray-500">Action</span>
             </div>
             {students.map((student) => (
-              <div key={student.socketId} className="participant-row">
-                <span className="participant-name">{student.name}</span>
+              <div key={student.socketId} className="grid grid-cols-[1fr_auto] py-3 border-b border-gray-100">
+                <span className="text-base text-gray-700">{student.name}</span>
                 <button
-                  className="kick-btn"
+                  className="bg-transparent border-none text-primary text-sm font-medium cursor-pointer hover:underline"
                   onClick={() => socket.emit('student:kick', { socketId: student.socketId })}
                 >
                   Kick out
@@ -102,7 +107,7 @@ const TeacherDashboard = ({ socket }) => {
         </Button>
       </div>
 
-      <div className="chat-button">
+      <div className="fixed bottom-8 right-8 w-14 h-14 bg-primary rounded-full flex items-center justify-center text-2xl cursor-pointer shadow-lg shadow-primary/30 transition-transform duration-300 hover:scale-110">
         💬
       </div>
     </div>

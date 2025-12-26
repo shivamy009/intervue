@@ -6,7 +6,7 @@ import { setStudents } from '../store/teacherSlice';
 import { setRegistered, setKicked, resetStudent } from '../store/studentSlice';
 import { addMessage, setMessages } from '../store/chatSlice';
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5001';
 
 export const useSocket = (role) => {
   const socketRef = useRef(null);

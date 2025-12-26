@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { useSocket } from '../../hooks/useSocket';
 import TeacherCreatePoll from './TeacherCreatePoll';
 import TeacherDashboard from './TeacherDashboard';
-import './Teacher.css';
 
 const Teacher = () => {
   const socket = useSocket('teacher');
@@ -16,11 +15,11 @@ const Teacher = () => {
   }, [socket]);
 
   if (!socket) {
-    return <div className="loading">Connecting...</div>;
+    return <div className="flex items-center justify-center min-h-screen text-lg text-gray-500">Connecting...</div>;
   }
 
   return (
-    <div className="teacher">
+    <div className="min-h-screen">
       {!activePoll || activePoll.status !== 'active' ? (
         <TeacherCreatePoll socket={socket} />
       ) : (

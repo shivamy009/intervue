@@ -5,7 +5,6 @@ import Card from '../../components/Card';
 import Button from '../../components/Button';
 import Timer from '../../components/Timer';
 import { usePollTimer } from '../../hooks/usePollTimer';
-import './TeacherCreatePoll.css';
 
 const TeacherCreatePoll = ({ socket }) => {
   const { activePoll } = useSelector((state) => state.poll);
@@ -53,79 +52,83 @@ const TeacherCreatePoll = ({ socket }) => {
   };
 
   if (activePoll && activePoll.status === 'active') {
-    return null; // Show live dashboard instead
+    return null;
   }
 
   return (
-    <div className="teacher-create-poll">
+    <div className="flex flex-col items-center min-h-screen px-5 py-10 bg-gray-50">
       <Badge icon="⭐">Intervue Poll</Badge>
       
-      <h1 className="create-title">Let's Get Started</h1>
-      <p className="create-subtitle">
+      <h1 className="text-4xl font-bold text-gray-900 my-8 text-center">Let's Get Started</h1>
+      <p className="text-base text-gray-500 text-center max-w-2xl mb-12">
         you'll have the ability to create and manage polls, ask questions, and monitor
         your students' responses in real-time.
       </p>
 
-      <Card className="create-form">
-        <div className="form-header">
-          <label className="form-label">Enter your question</label>
-          <div className="time-selector">
+      <Card className="w-full max-w-3xl mb-8">
+        <div className="flex justify-between items-center mb-4">
+          <label className="text-base font-semibold text-gray-900">Enter your question</label>
+          <div className="relative inline-flex items-center">
             <select
               value={timeLimit}
               onChange={(e) => setTimeLimit(Number(e.target.value))}
-              className="time-dropdown"
+              className="appearance-none bg-gray-100 border border-gray-200 py-2 pr-8 pl-3 rounded-md text-sm cursor-pointer"
             >
               <option value={30}>30 seconds</option>
               <option value={60}>60 seconds</option>
               <option value={90}>90 seconds</option>
               <option value={120}>120 seconds</option>
             </select>
-            <span className="dropdown-arrow">▼</span>
+            <span className="absolute right-3 pointer-events-none text-primary text-xs">▼</span>
           </div>
         </div>
 
         <textarea
-          className="question-input"
+          className="w-full min-h-[120px] p-4 border border-gray-200 rounded-lg text-sm resize-vertical bg-gray-50 focus:outline-none focus:border-primary"
           placeholder="Rahul Bajaj"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           maxLength={100}
         />
-        <div className="char-count">0/{question.length}</div>
+        <div className="text-right text-xs text-gray-400 mt-2">0/{question.length}</div>
 
-        <div className="form-section">
-          <h3 className="section-title">Edit Options</h3>
-          <h3 className="section-title">Is it Correct?</h3>
+        <div className="grid grid-cols-[1fr_auto] gap-4 my-8">
+          <h3 className="text-base font-semibold text-gray-900">Edit Options</h3>
+          <h3 className="text-base font-semibold text-gray-900">Is it Correct?</h3>
         </div>
 
         {options.map((option, index) => (
-          <div key={index} className="option-row">
-            <div className="option-input-wrapper">
-              <span className="option-number">{index + 1}</span>
+          <div key={index} className="grid grid-cols-[1fr_auto] gap-4 mb-4">
+            <div className="flex items-center gap-3 bg-gray-100 p-3 rounded-lg">
+              <span className="flex items-center justify-center w-7 h-7 bg-primary text-white rounded-full text-sm font-semibold flex-shrink-0">
+                {index + 1}
+              </span>
               <input
                 type="text"
-                className="option-input"
+                className="flex-1 border-none bg-transparent text-sm outline-none"
                 placeholder="Rahul Bajaj"
                 value={option.text}
                 onChange={(e) => handleOptionChange(index, e.target.value)}
               />
             </div>
-            <div className="radio-group">
-              <label className="radio-label">
+            <div className="flex gap-6 items-center">
+              <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-700">
                 <input
                   type="radio"
                   name={`correct-${index}`}
                   checked={option.isCorrect}
                   onChange={() => handleCorrectChange(index)}
+                  className="w-[18px] h-[18px] cursor-pointer accent-primary"
                 />
                 <span>Yes</span>
               </label>
-              <label className="radio-label">
+              <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-700">
                 <input
                   type="radio"
                   name={`correct-${index}`}
                   checked={!option.isCorrect}
                   onChange={() => {}}
+                  className="w-[18px] h-[18px] cursor-pointer accent-primary"
                 />
                 <span>No</span>
               </label>
@@ -133,7 +136,10 @@ const TeacherCreatePoll = ({ socket }) => {
           </div>
         ))}
 
-        <button className="add-option-btn" onClick={handleAddOption}>
+        <button 
+          className="w-full p-3 border-2 border-dashed border-primary bg-transparent text-primary text-sm font-medium rounded-lg cursor-pointer mt-4 transition-all duration-300 hover:bg-indigo-50"
+          onClick={handleAddOption}
+        >
           + Add More option
         </button>
       </Card>

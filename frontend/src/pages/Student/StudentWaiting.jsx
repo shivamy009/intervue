@@ -1,15 +1,14 @@
 import React from 'react';
 import Badge from '../../components/Badge';
-import './StudentWaiting.css';
 
 const StudentWaiting = () => {
   return (
-    <div className="student-waiting">
+    <div className="flex flex-col items-center justify-center min-h-screen px-5 py-10 bg-gray-50">
       <Badge icon="⭐">Intervue Poll</Badge>
       
-      <div className="spinner"></div>
+      <div className="w-20 h-20 border-[6px] border-gray-200 border-t-primary rounded-full animate-spin my-12"></div>
       
-      <h2 className="waiting-text">Wait for the teacher to ask questions..</h2>
+      <h2 className="text-2xl font-semibold text-gray-900 text-center">Wait for the teacher to ask questions..</h2>
     </div>
   );
 };

@@ -6,7 +6,6 @@ import StudentWaiting from './StudentWaiting';
 import StudentPoll from './StudentPoll';
 import StudentResults from './StudentResults';
 import StudentKicked from './StudentKicked';
-import './Student.css';
 
 const Student = () => {
   const socket = useSocket('student');
@@ -15,7 +14,7 @@ const Student = () => {
   const [nameSubmitted, setNameSubmitted] = useState(false);
 
   if (!socket) {
-    return <div className="loading">Connecting...</div>;
+    return <div className="flex items-center justify-center min-h-screen text-lg text-gray-500">Connecting...</div>;
   }
 
   if (isKicked) {

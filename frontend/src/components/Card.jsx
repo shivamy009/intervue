@@ -1,9 +1,8 @@
 import React from 'react';
-import './Card.css';
 
 const Card = ({ children, className = '', onClick }) => {
   return (
-    <div className={`card ${className}`} onClick={onClick}>
+    <div className={`bg-white rounded-xl p-6 shadow-sm transition-all duration-300 hover:shadow-md ${className}`} onClick={onClick}>
       {children}
     </div>
   );

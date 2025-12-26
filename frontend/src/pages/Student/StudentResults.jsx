@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import Card from '../../components/Card';
 import Button from '../../components/Button';
-import './StudentResults.css';
 
 const StudentResults = ({ socket }) => {
   const { results } = useSelector((state) => state.poll);
@@ -12,28 +11,26 @@ const StudentResults = ({ socket }) => {
   }
 
   return (
-    <div className="student-results">
-      <h2 className="results-title">Question 1</h2>
+    <div className="min-h-screen px-5 py-10 bg-gray-50">
+      <h2 className="text-xl font-semibold text-gray-900 max-w-3xl mx-auto mb-6">Question 1</h2>
       
-      <Card className="results-question-card">
-        <p className="results-question-text">{results.question}</p>
+      <Card className="max-w-3xl mx-auto mb-8 bg-gray-700">
+        <p className="text-white text-base leading-relaxed">{results.question}</p>
       </Card>
 
-      <div className="results-container">
+      <div className="max-w-3xl mx-auto mb-12">
         {results.results.map((result, index) => (
-          <div key={index} className="result-bar-wrapper">
-            <div className="result-bar">
-              <div className="result-info">
-                <span className="result-icon">
-                  {String.fromCharCode(9679)}
-                </span>
-                <span className="result-text">{result.text}</span>
+          <div key={index} className="mb-6">
+            <div className="flex justify-between items-center mb-2">
+              <div className="flex items-center gap-2">
+                <span className="text-primary text-xl">●</span>
+                <span className="text-base text-gray-700 font-medium">{result.text}</span>
               </div>
-              <span className="result-percentage">{result.percentage}%</span>
+              <span className="text-base font-semibold text-gray-900">{result.percentage}%</span>
             </div>
-            <div className="progress-bar">
+            <div className="h-2 bg-gray-200 rounded overflow-hidden">
               <div
-                className="progress-fill"
+                className="h-full bg-primary transition-all duration-500"
                 style={{ width: `${result.percentage}%` }}
               />
             </div>
@@ -41,9 +38,11 @@ const StudentResults = ({ socket }) => {
         ))}
       </div>
 
-      <p className="results-footer">Wait for the teacher to ask a new question..</p>
+      <p className="text-center text-lg font-semibold text-gray-900 max-w-3xl mx-auto">
+        Wait for the teacher to ask a new question..
+      </p>
 
-      <div className="chat-button">
+      <div className="fixed bottom-8 right-8 w-14 h-14 bg-primary rounded-full flex items-center justify-center text-2xl cursor-pointer shadow-lg shadow-primary/30 transition-transform duration-300 hover:scale-110">
         💬
       </div>
     </div>
