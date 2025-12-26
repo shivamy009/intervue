@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Card from '../../components/Card';
 import Button from '../../components/Button';
 import Timer from '../../components/Timer';
+import ParticipantModal from '../../components/ParticipantModal';
 import { usePollTimer } from '../../hooks/usePollTimer';
 import { setSelectedOption, setVoted } from '../../store/studentSlice';
 
@@ -10,6 +11,8 @@ const StudentPoll = ({ socket }) => {
   const dispatch = useDispatch();
   const { activePoll } = useSelector((state) => state.poll);
   const { selectedOption, hasVoted } = useSelector((state) => state.student);
+  const { students } = useSelector((state) => state.teacher);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const remainingTime = usePollTimer(activePoll);
 
   const handleOptionSelect = (index) => {
@@ -33,13 +36,13 @@ const StudentPoll = ({ socket }) => {
   }
 
   return (
-    <div className="min-h-screen px-5 py-10 bg-gray-50">
+    <div className="min-h-screen px-5 py-10" style={{ backgroundColor: '#F2F2F2' }}>
       <div className="flex justify-between items-center max-w-3xl mx-auto mb-6">
-        <h3 className="text-xl font-semibold text-gray-900">Question 1</h3>
+        <h3 className="text-xl font-semibold" style={{ color: '#373737' }}>Question 1</h3>
         <Timer remainingTime={remainingTime} />
       </div>
 
-      <Card className="max-w-3xl mx-auto mb-8 bg-gray-800">
+      <Card className="max-w-3xl mx-auto mb-8" style={{ backgroundColor: '#6E6E6E', padding: '20px' }}>
         <p className="text-white text-base leading-relaxed font-medium">{activePoll.question}</p>
       </Card>
 
@@ -48,17 +51,19 @@ const StudentPoll = ({ socket }) => {
           <Card
             key={index}
             className={`cursor-pointer transition-all duration-300 border-2 ${
-              selectedOption === index 
-                ? 'border-indigo-600 bg-indigo-50' 
-                : 'border-gray-200'
-            } ${hasVoted ? 'opacity-60 cursor-not-allowed' : 'hover:border-indigo-600 hover:-translate-y-0.5'}`}
+              hasVoted ? 'opacity-60 cursor-not-allowed' : 'hover:-translate-y-0.5'
+            }`}
+            style={{
+              borderColor: selectedOption === index ? '#7765DA' : '#E5E7EB',
+              backgroundColor: selectedOption === index ? '#F3F0FF' : 'white'
+            }}
             onClick={() => handleOptionSelect(index)}
           >
             <div className="flex items-center gap-3">
-              <span className={`text-xl ${selectedOption === index ? 'text-indigo-600' : 'text-gray-400'}`}>
+              <span className={`text-xl`} style={{ color: selectedOption === index ? '#7765DA' : '#6E6E6E' }}>
                 ●
               </span>
-              <span className="text-base text-gray-900 font-medium">{option.text}</span>
+              <span className="text-base font-medium" style={{ color: '#373737' }}>{option.text}</span>
             </div>
           </Card>
         ))}
@@ -73,9 +78,20 @@ const StudentPoll = ({ socket }) => {
         </Button>
       </div>
 
-      <div className="fixed bottom-8 right-8 w-14 h-14 bg-indigo-600 rounded-full flex items-center justify-center text-2xl cursor-pointer shadow-lg shadow-indigo-600/30 transition-transform duration-300 hover:scale-110">
+      <div 
+        className="fixed bottom-8 right-8 w-14 h-14 rounded-full flex items-center justify-center text-2xl cursor-pointer shadow-lg transition-transform duration-300 hover:scale-110"
+        style={{ backgroundColor: '#7765DA', boxShadow: '0 10px 15px -3px rgba(119, 101, 218, 0.3)' }}
+        onClick={() => setIsModalOpen(true)}
+      >
         💬
       </div>
+
+      <ParticipantModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        students={students}
+        socket={socket}
+      />
     </div>
   );
 };
