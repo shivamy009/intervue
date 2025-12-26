@@ -13,16 +13,16 @@ const Student = () => {
   const { activePoll, results } = useSelector((state) => state.poll);
   const [nameSubmitted, setNameSubmitted] = useState(false);
 
-  if (!socket) {
-    return <div className="flex items-center justify-center min-h-screen text-lg text-gray-500">Connecting...</div>;
-  }
-
   if (isKicked) {
     return <StudentKicked />;
   }
 
   if (!nameSubmitted) {
     return <StudentNameEntry socket={socket} onNameSubmit={() => setNameSubmitted(true)} />;
+  }
+
+  if (!socket) {
+    return <div className="flex items-center justify-center min-h-screen text-lg text-gray-800">Connecting...</div>;
   }
 
   if (!activePoll || activePoll.status !== 'active') {

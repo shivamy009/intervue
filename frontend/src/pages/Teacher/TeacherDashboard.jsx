@@ -28,15 +28,15 @@ const TeacherDashboard = ({ socket }) => {
       <div className="max-w-3xl mx-auto">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Question</h2>
         
-        <Card className="mb-8 bg-gray-700">
-          <p className="text-white text-base leading-relaxed">{activePoll.question}</p>
+        <Card className="mb-8 bg-gray-800">
+          <p className="text-white text-base leading-relaxed font-medium">{activePoll.question}</p>
         </Card>
 
         <div className="flex gap-0.5 mb-6 border-b-2 border-gray-200">
           <button
             className={`px-6 py-3 bg-transparent border-none text-base font-medium transition-all duration-300 border-b-2 -mb-0.5 ${
               activeTab === 'chart' 
-                ? 'text-primary border-primary' 
+                ? 'text-indigo-600 border-indigo-600' 
                 : 'text-gray-500 border-transparent'
             }`}
             onClick={() => setActiveTab('chart')}
@@ -46,7 +46,7 @@ const TeacherDashboard = ({ socket }) => {
           <button
             className={`px-6 py-3 bg-transparent border-none text-base font-medium transition-all duration-300 border-b-2 -mb-0.5 ${
               activeTab === 'participants' 
-                ? 'text-primary border-primary' 
+                ? 'text-indigo-600 border-indigo-600' 
                 : 'text-gray-500 border-transparent'
             }`}
             onClick={() => setActiveTab('participants')}
@@ -65,14 +65,14 @@ const TeacherDashboard = ({ socket }) => {
                 <div key={index} className="mb-6">
                   <div className="flex justify-between items-center mb-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-primary text-xl">●</span>
-                      <span className="text-base text-gray-700 font-medium">{option.text}</span>
+                      <span className="text-indigo-600 text-xl">●</span>
+                      <span className="text-base text-gray-900 font-medium">{option.text}</span>
                     </div>
                     <span className="text-base font-semibold text-gray-900">{percentage}%</span>
                   </div>
                   <div className="h-2 bg-gray-200 rounded overflow-hidden">
                     <div
-                      className="h-full bg-primary transition-all duration-500"
+                      className="h-full bg-indigo-600 transition-all duration-500"
                       style={{ width: `${percentage}%` }}
                     />
                   </div>
@@ -90,9 +90,9 @@ const TeacherDashboard = ({ socket }) => {
             </div>
             {students.map((student) => (
               <div key={student.socketId} className="grid grid-cols-[1fr_auto] py-3 border-b border-gray-100">
-                <span className="text-base text-gray-700">{student.name}</span>
+                <span className="text-base text-gray-900">{student.name}</span>
                 <button
-                  className="bg-transparent border-none text-primary text-sm font-medium cursor-pointer hover:underline"
+                  className="bg-transparent border-none text-indigo-600 text-sm font-medium cursor-pointer hover:underline"
                   onClick={() => socket.emit('student:kick', { socketId: student.socketId })}
                 >
                   Kick out
@@ -107,7 +107,7 @@ const TeacherDashboard = ({ socket }) => {
         </Button>
       </div>
 
-      <div className="fixed bottom-8 right-8 w-14 h-14 bg-primary rounded-full flex items-center justify-center text-2xl cursor-pointer shadow-lg shadow-primary/30 transition-transform duration-300 hover:scale-110">
+      <div className="fixed bottom-8 right-8 w-14 h-14 bg-indigo-600 rounded-full flex items-center justify-center text-2xl cursor-pointer shadow-lg shadow-indigo-600/30 transition-transform duration-300 hover:scale-110">
         💬
       </div>
     </div>

@@ -30,7 +30,7 @@ const StudentNameEntry = ({ socket, onNameSubmit }) => {
         <label className="block text-base font-semibold text-gray-900 mb-3">Enter your Name</label>
         <input
           type="text"
-          className="w-full p-4 border border-gray-200 rounded-lg text-base bg-white focus:outline-none focus:border-primary focus:shadow-[0_0_0_3px_rgba(99,102,241,0.1)]"
+          className="w-full p-4 border border-gray-200 rounded-lg text-base text-gray-900 bg-white focus:outline-none focus:border-indigo-600 focus:shadow-[0_0_0_3px_rgba(99,102,241,0.1)]"
           placeholder="Rahul Bajaj"
           value={name}
           onChange={(e) => setName(e.target.value)}

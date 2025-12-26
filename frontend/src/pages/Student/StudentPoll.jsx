@@ -39,8 +39,8 @@ const StudentPoll = ({ socket }) => {
         <Timer remainingTime={remainingTime} />
       </div>
 
-      <Card className="max-w-3xl mx-auto mb-8 bg-gray-700">
-        <p className="text-white text-base leading-relaxed">{activePoll.question}</p>
+      <Card className="max-w-3xl mx-auto mb-8 bg-gray-800">
+        <p className="text-white text-base leading-relaxed font-medium">{activePoll.question}</p>
       </Card>
 
       <div className="max-w-3xl mx-auto flex flex-col gap-4 mb-8">
@@ -49,16 +49,16 @@ const StudentPoll = ({ socket }) => {
             key={index}
             className={`cursor-pointer transition-all duration-300 border-2 ${
               selectedOption === index 
-                ? 'border-primary bg-indigo-50' 
+                ? 'border-indigo-600 bg-indigo-50' 
                 : 'border-gray-200'
-            } ${hasVoted ? 'opacity-60 cursor-not-allowed' : 'hover:border-primary hover:-translate-y-0.5'}`}
+            } ${hasVoted ? 'opacity-60 cursor-not-allowed' : 'hover:border-indigo-600 hover:-translate-y-0.5'}`}
             onClick={() => handleOptionSelect(index)}
           >
             <div className="flex items-center gap-3">
-              <span className={`text-xl ${selectedOption === index ? 'text-primary' : 'text-gray-400'}`}>
+              <span className={`text-xl ${selectedOption === index ? 'text-indigo-600' : 'text-gray-400'}`}>
                 ●
               </span>
-              <span className="text-base text-gray-700 font-medium">{option.text}</span>
+              <span className="text-base text-gray-900 font-medium">{option.text}</span>
             </div>
           </Card>
         ))}
@@ -73,7 +73,7 @@ const StudentPoll = ({ socket }) => {
         </Button>
       </div>
 
-      <div className="fixed bottom-8 right-8 w-14 h-14 bg-primary rounded-full flex items-center justify-center text-2xl cursor-pointer shadow-lg shadow-primary/30 transition-transform duration-300 hover:scale-110">
+      <div className="fixed bottom-8 right-8 w-14 h-14 bg-indigo-600 rounded-full flex items-center justify-center text-2xl cursor-pointer shadow-lg shadow-indigo-600/30 transition-transform duration-300 hover:scale-110">
         💬
       </div>
     </div>
