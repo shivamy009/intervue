@@ -48,7 +48,8 @@ class SocketHandler {
           
           socket.emit('student:registered', { student });
           
-          if (activePoll) {
+          // Only send active poll if it's actually active
+          if (activePoll && activePoll.status === 'active') {
             socket.emit('poll:question', {
               poll: activePoll,
               remainingTime: activePoll.remainingTime
@@ -70,30 +71,70 @@ class SocketHandler {
         try {
           const { question, options, timeLimit } = data;
           
-          // Check if this is a request to create new poll (empty object)
+          // Check if this is a request to show create form (empty object)
           if (!question) {
-            // Clear active poll to show create form
-            socket.emit('poll:created', { poll: null });
+            // Check if we can create a new poll
+            const activePoll = await PollService.getActivePoll();
+            
+            if (activePoll) {
+              // Check if all students have answered
+              const allAnswered = await PollService.checkAllStudentsAnswered(activePoll._id);
+              
+              if (!allAnswered) {
+                socket.emit('error', { message: 'Cannot create new poll: Current poll is still active and not all students have answered' });
+                return;
+              }
+              
+              // Complete the current poll first
+              await this.completePoll(activePoll._id);
+            }
+            
+            // Tell teacher to clear and show create form
+            this.io.to('teacher').emit('poll:cleared');
+            // Also tell students to clear and wait
+            this.io.to('students').emit('poll:cleared');
             return;
+          }
+          
+          // Validate that no active poll exists
+          const existingPoll = await PollService.getActivePoll();
+          if (existingPoll) {
+            const allAnswered = await PollService.checkAllStudentsAnswered(existingPoll._id);
+            if (!allAnswered) {
+              socket.emit('error', { message: 'Cannot create new poll: Current poll is still active and not all students have answered' });
+              return;
+            }
+            // Complete existing poll first
+            await this.completePoll(existingPoll._id);
           }
           
           // Create poll in database
           const poll = await PollService.createPoll(question, options, timeLimit);
+          const pollObj = poll.toObject();
           
-          // Broadcast to all students
+          console.log('Broadcasting new poll to students:', pollObj._id);
+          
+          // First clear any previous poll state
+          this.io.to('teacher').emit('poll:cleared');
+          this.io.to('students').emit('poll:cleared');
+          
+          // Then broadcast new poll to all students
           this.io.to('students').emit('poll:question', {
-            poll: poll.toObject(),
+            poll: pollObj,
             remainingTime: timeLimit
           });
 
-          // Send confirmation to teacher
-          socket.emit('poll:created', { poll: poll.toObject() });
+          console.log('Sending poll confirmation to teacher');
+          
+          // Send confirmation to teacher with full poll object
+          this.io.to('teacher').emit('poll:created', { poll: pollObj });
 
           // Start timer
           this.startPollTimer(poll._id, timeLimit);
 
-          console.log('Poll created:', poll._id);
+          console.log('Poll created and broadcast successfully:', poll._id);
         } catch (error) {
+          console.error('Poll creation error:', error);
           socket.emit('error', { message: error.message });
         }
       });
@@ -223,6 +264,8 @@ class SocketHandler {
 
   async completePoll(pollId) {
     try {
+      console.log('Completing poll:', pollId);
+      
       // Complete the poll
       await PollService.completePoll(pollId);
 
@@ -232,13 +275,19 @@ class SocketHandler {
       // Broadcast results to everyone
       this.io.emit('poll:completed', results);
 
+      // Clear the active poll state for everyone after a delay to show results
+      setTimeout(() => {
+        console.log('Clearing completed poll from client state');
+        this.io.emit('poll:cleared');
+      }, 2000);
+
       // Clear timer
       if (this.pollTimers.has(pollId.toString())) {
         clearTimeout(this.pollTimers.get(pollId.toString()));
         this.pollTimers.delete(pollId.toString());
       }
 
-      console.log('Poll completed:', pollId);
+      console.log('Poll completed successfully:', pollId);
     } catch (error) {
       console.error('Error completing poll:', error);
     }

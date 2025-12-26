@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import io from 'socket.io-client';
-import { setPoll, setPollResults, completePoll, setPollHistory } from '../store/pollSlice';
+import { setPoll, setPollResults, completePoll, setPollHistory, clearPoll } from '../store/pollSlice';
 import { setStudents } from '../store/teacherSlice';
 import { setRegistered, setKicked, resetStudent } from '../store/studentSlice';
 import { addMessage, setMessages } from '../store/chatSlice';
@@ -38,6 +38,7 @@ export const useSocket = (role) => {
 
     socket.on('error', (error) => {
       console.error('Socket error:', error);
+      alert(error.message || 'An error occurred');
     });
 
     // Teacher-specific listeners
@@ -45,6 +46,9 @@ export const useSocket = (role) => {
       socket.on('teacher:state', (data) => {
         if (data.activePoll) {
           dispatch(setPoll(data.activePoll));
+        } else {
+          // No active poll, clear everything
+          dispatch(clearPoll());
         }
         if (data.students) {
           dispatch(setStudents(data.students));
@@ -53,6 +57,8 @@ export const useSocket = (role) => {
 
       socket.on('poll:created', (data) => {
         dispatch(setPoll(data.poll));
+        // Clear previous results when new poll is created
+        dispatch(setPollResults(null));
       });
 
       socket.on('students:updated', (students) => {
@@ -66,6 +72,10 @@ export const useSocket = (role) => {
       socket.on('poll:history', (polls) => {
         dispatch(setPollHistory(polls));
       });
+
+      socket.on('poll:cleared', () => {
+        dispatch(clearPoll());
+      });
     }
 
     // Student-specific listeners
@@ -75,8 +85,11 @@ export const useSocket = (role) => {
       });
 
       socket.on('poll:question', (data) => {
+        console.log('Student received new poll:', data.poll);
         dispatch(setPoll(data.poll));
         dispatch(resetStudent());
+        // Clear previous results
+        dispatch(setPollResults(null));
       });
 
       socket.on('vote:submitted', (data) => {
@@ -85,6 +98,11 @@ export const useSocket = (role) => {
 
       socket.on('student:kicked', () => {
         dispatch(setKicked(true));
+      });
+
+      socket.on('poll:cleared', () => {
+        dispatch(clearPoll());
+        dispatch(resetStudent());
       });
     }
 

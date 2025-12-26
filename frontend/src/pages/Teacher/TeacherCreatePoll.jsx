@@ -6,7 +6,7 @@ import Button from '../../components/Button';
 import Timer from '../../components/Timer';
 import { usePollTimer } from '../../hooks/usePollTimer';
 
-const TeacherCreatePoll = ({ socket }) => {
+const TeacherCreatePoll = ({ socket, onShowHistory }) => {
   const { activePoll } = useSelector((state) => state.poll);
   const [question, setQuestion] = useState('');
   const [options, setOptions] = useState([
@@ -15,6 +15,11 @@ const TeacherCreatePoll = ({ socket }) => {
   ]);
   const [timeLimit, setTimeLimit] = useState(60);
   const remainingTime = usePollTimer(activePoll);
+
+  const handleShowHistory = () => {
+    socket.emit('poll:history');
+    onShowHistory();
+  };
 
   const handleAddOption = () => {
     setOptions([...options, { text: '', isCorrect: false }]);
@@ -57,6 +62,14 @@ const TeacherCreatePoll = ({ socket }) => {
 
   return (
     <div className="flex flex-col items-center min-h-screen px-5 py-10 bg-gray-50">
+      <div className="w-full max-w-3xl mb-4">
+        <div className="flex justify-end">
+          <Button variant="outline" onClick={handleShowHistory}>
+            👁️ View Poll history
+          </Button>
+        </div>
+      </div>
+      
       <Badge icon="⭐">Intervue Poll</Badge>
       
       <h1 className="text-4xl font-bold text-gray-900 my-8 text-center">Let's Get Started</h1>

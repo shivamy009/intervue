@@ -35,6 +35,11 @@ class PollService {
 
       const elapsed = Math.floor((Date.now() - poll.startedAt.getTime()) / 1000);
       const remainingTime = Math.max(0, poll.timeLimit - elapsed);
+      
+      // If time has expired, don't return it as active
+      if (remainingTime === 0) {
+        return null;
+      }
 
       return {
         ...poll.toObject(),

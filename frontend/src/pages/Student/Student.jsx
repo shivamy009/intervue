@@ -52,18 +52,23 @@ const Student = () => {
     return <div className="flex items-center justify-center min-h-screen text-lg text-gray-800">Connecting...</div>;
   }
 
-  if (!activePoll || activePoll.status !== 'active') {
-    if (results) {
+  // If there's an active poll, show it
+  if (activePoll && activePoll.status === 'active') {
+    // If student has voted, show results
+    if (hasVoted) {
       return <StudentResults socket={socket} />;
     }
-    return <StudentWaiting />;
+    // Otherwise show poll to vote
+    return <StudentPoll socket={socket} />;
   }
 
-  if (hasVoted || results) {
+  // If poll is completed, show results
+  if (results) {
     return <StudentResults socket={socket} />;
   }
 
-  return <StudentPoll socket={socket} />;
+  // No active poll - show waiting screen
+  return <StudentWaiting />;
 };
 
 export default Student;
