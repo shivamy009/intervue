@@ -1,0 +1,92 @@
+.student-poll {
+  min-height: 100vh;
+  padding: 40px 20px;
+  background: #F9FAFB;
+}
+
+.poll-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 800px;
+  margin: 0 auto 24px;
+}
+
+.poll-question-label {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.poll-question-card {
+  max-width: 800px;
+  margin: 0 auto 32px;
+  background: #374151;
+}
+
+.poll-question-text {
+  color: white;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.poll-options {
+  max-width: 800px;
+  margin: 0 auto 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.poll-option {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid #E5E7EB;
+}
+
+.poll-option.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.option-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.option-icon {
+  color: #9CA3AF;
+  font-size: 20px;
+}
+
+.poll-option.card-selected .option-icon {
+  color: #6366F1;
+}
+
+.option-text {
+  font-size: 15px;
+  color: #374151;
+  font-weight: 500;
+}
+
+.chat-button {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 56px;
+  height: 56px;
+  background: #6366F1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  transition: all 0.3s ease;
+}
+
+.chat-button:hover {
+  transform: scale(1.1);
+}

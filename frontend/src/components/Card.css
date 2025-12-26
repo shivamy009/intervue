@@ -1,0 +1,26 @@
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-selectable {
+  cursor: pointer;
+  border: 2px solid #E5E7EB;
+}
+
+.card-selectable:hover {
+  border-color: #6366F1;
+  transform: translateY(-2px);
+}
+
+.card-selected {
+  border: 2px solid #6366F1;
+  background: #EEF2FF;
+}
