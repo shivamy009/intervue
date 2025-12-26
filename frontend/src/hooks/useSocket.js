@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import io from 'socket.io-client';
 import { setPoll, setPollResults, completePoll, setPollHistory } from '../store/pollSlice';
@@ -6,22 +6,26 @@ import { setStudents } from '../store/teacherSlice';
 import { setRegistered, setKicked, resetStudent } from '../store/studentSlice';
 import { addMessage, setMessages } from '../store/chatSlice';
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5001';
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3000';
 
 export const useSocket = (role) => {
   const socketRef = useRef(null);
+  const [socket, setSocket] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
     // Create socket connection
-    socketRef.current = io(SOCKET_URL, {
+    const newSocket = io(SOCKET_URL, {
       transports: ['websocket'],
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionAttempts: 5
     });
 
-    const socket = socketRef.current;
+    socketRef.current = newSocket;
+    setSocket(newSocket);
+
+    const socket = newSocket;
 
     // Connection events
     socket.on('connect', () => {
@@ -99,12 +103,14 @@ export const useSocket = (role) => {
 
     // Cleanup
     return () => {
-      socket.off();
-      socket.disconnect();
+      if (socketRef.current) {
+        socketRef.current.removeAllListeners();
+        socketRef.current.disconnect();
+      }
     };
-  }, [role, dispatch]);
+  }, []);
 
-  return socketRef.current;
+  return socket;
 };
 
 export default useSocket;

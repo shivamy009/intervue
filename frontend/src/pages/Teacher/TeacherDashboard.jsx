@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Card from '../../components/Card';
 import Button from '../../components/Button';
 import Timer from '../../components/Timer';
 import { usePollTimer } from '../../hooks/usePollTimer';
+import { clearPoll } from '../../store/pollSlice';
 
 const TeacherDashboard = ({ socket }) => {
+  const dispatch = useDispatch();
   const { activePoll, results } = useSelector((state) => state.poll);
   const { students } = useSelector((state) => state.teacher);
   const [activeTab, setActiveTab] = useState('chart');
@@ -102,7 +104,10 @@ const TeacherDashboard = ({ socket }) => {
           </Card>
         )}
 
-        <Button onClick={() => socket.emit('poll:create', {})}>
+        <Button onClick={() => {
+          dispatch(clearPoll());
+          socket.emit('poll:create', {});
+        }}>
           + Ask a new question
         </Button>
       </div>

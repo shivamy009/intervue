@@ -70,6 +70,13 @@ class SocketHandler {
         try {
           const { question, options, timeLimit } = data;
           
+          // Check if this is a request to create new poll (empty object)
+          if (!question) {
+            // Clear active poll to show create form
+            socket.emit('poll:created', { poll: null });
+            return;
+          }
+          
           // Create poll in database
           const poll = await PollService.createPoll(question, options, timeLimit);
           
@@ -80,7 +87,7 @@ class SocketHandler {
           });
 
           // Send confirmation to teacher
-          socket.emit('poll:created', { poll });
+          socket.emit('poll:created', { poll: poll.toObject() });
 
           // Start timer
           this.startPollTimer(poll._id, timeLimit);

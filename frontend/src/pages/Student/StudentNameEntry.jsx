@@ -4,15 +4,26 @@ import Badge from '../../components/Badge';
 import Button from '../../components/Button';
 import { setStudentName } from '../../store/studentSlice';
 
-const StudentNameEntry = ({ socket, onNameSubmit }) => {
+const StudentNameEntry = ({ socket, isConnected, onNameSubmit }) => {
   const [name, setName] = useState('');
   const dispatch = useDispatch();
 
   const handleSubmit = () => {
-    if (name.trim()) {
-      dispatch(setStudentName(name));
-      socket.emit('student:join', { name });
-      onNameSubmit();
+    if (name.trim() && socket) {
+      if (isConnected) {
+        dispatch(setStudentName(name));
+        socket.emit('student:join', { name });
+        onNameSubmit();
+      } else {
+        // Wait for connection then submit
+        const handleConnect = () => {
+          dispatch(setStudentName(name));
+          socket.emit('student:join', { name });
+          onNameSubmit();
+          socket.off('connect', handleConnect);
+        };
+        socket.on('connect', handleConnect);
+      }
     }
   };
 

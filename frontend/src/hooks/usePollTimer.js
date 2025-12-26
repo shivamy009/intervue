@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { updatePollTimer } from '../store/pollSlice';
 
 export const usePollTimer = (poll) => {
   const [remainingTime, setRemainingTime] = useState(0);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!poll || poll.status === 'completed') {
@@ -28,7 +25,6 @@ export const usePollTimer = (poll) => {
     const interval = setInterval(() => {
       setRemainingTime((prev) => {
         const newTime = Math.max(0, prev - 1);
-        dispatch(updatePollTimer(newTime));
         
         if (newTime === 0) {
           clearInterval(interval);
@@ -39,7 +35,7 @@ export const usePollTimer = (poll) => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [poll, dispatch]);
+  }, [poll]);
 
   return remainingTime;
 };
