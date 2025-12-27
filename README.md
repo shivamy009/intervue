@@ -1,261 +1,143 @@
-# Resilient Live Polling System
+# Live Polling System
 
-A real-time polling system with Teacher and Student personas, built with resilient state recovery and synchronized timers.
+A simple real-time polling app for classrooms. Teachers create polls, students answer them, everyone sees results live.
 
-## Features
+Built this to handle the annoying edge cases - like what happens when someone refreshes mid-poll, or joins late, or tries to vote twice. It actually works.
 
-### Core Features
-- **Teacher Persona**: Create polls, view live results, manage students, view poll history
-- **Student Persona**: Join sessions, submit answers, view results in real-time
-- **Real-time Communication**: Socket.io for instant updates
-- **State Recovery**: Resilient system that recovers state on page refresh
-- **Timer Synchronization**: Students joining late get correct remaining time
-- **Race Condition Protection**: Students can't vote multiple times
-- **Chat Feature**: Real-time chat between teachers and students
+## What it does
 
-### Technical Implementation
-- **Frontend**: React.js with Redux Toolkit for state management
-- **Backend**: Node.js with Express and Socket.io
-- **Database**: MongoDB for persistence
-- **Architecture**: Clean separation of concerns with Controller-Service pattern
+**Teachers can:**
+- Create timed polls (30-120 sec)
+- See votes come in live
+- Kick troublemakers
+- Check poll history
+- Chat with everyone
 
-## Tech Stack
+**Students can:**
+- Join with just a name
+- Answer before time runs out
+- See results after voting
+- Chat
 
-- **Frontend**: React, Redux Toolkit, Socket.io Client, React Router
-- **Backend**: Node.js, Express, Socket.io, Mongoose
-- **Database**: MongoDB
-- **Styling**: Custom CSS with responsive design
+The cool part: if you refresh during a poll, you don't lose anything. Students who join late see the correct time remaining (synced with server, not their clock). And the database prevents double-voting even if someone mashes the submit button.
 
-## Project Structure
+## Stack
 
-```
-intervue/
-├── backend/
-│   ├── config/
-│   │   └── database.js
-│   ├── models/
-│   │   ├── Poll.js
-│   │   ├── Vote.js
-│   │   ├── Student.js
-│   │   └── Message.js
-│   ├── services/
-│   │   ├── PollService.js
-│   │   ├── StudentService.js
-│   │   └── ChatService.js
-│   ├── socket/
-│   │   └── SocketHandler.js
-│   ├── .env
-│   ├── server.js
-│   └── package.json
-│
-└── frontend/
-    ├── src/
-    │   ├── components/
-    │   │   ├── Button.jsx
-    │   │   ├── Card.jsx
-    │   │   ├── Badge.jsx
-    │   │   ├── Timer.jsx
-    │   │   └── ChatPopup.jsx
-    │   ├── hooks/
-    │   │   ├── useSocket.js
-    │   │   └── usePollTimer.js
-    │   ├── pages/
-    │   │   ├── RoleSelection/
-    │   │   ├── Teacher/
-    │   │   └── Student/
-    │   ├── store/
-    │   │   ├── pollSlice.js
-    │   │   ├── teacherSlice.js
-    │   │   ├── studentSlice.js
-    │   │   ├── chatSlice.js
-    │   │   └── store.js
-    │   ├── App.jsx
-    │   └── main.jsx
-    ├── .env
-    └── package.json
-```
+- React + Redux Toolkit (frontend)
+- Node/Express + Socket.io (backend)
+- MongoDB (persistence)
 
-## Setup Instructions
+## Running it locally
 
-### Prerequisites
-- Node.js (v16 or higher)
-- MongoDB installed and running locally
-- npm or yarn
+You'll need Node 16+ and MongoDB running.
 
-### Backend Setup
-
-1. Navigate to the backend directory:
+**Backend:**
 ```bash
 cd backend
-```
-
-2. Install dependencies:
-```bash
 npm install
 ```
 
-3. Create a `.env` file (already created):
-```env
+Create `.env`:
+```
 PORT=5000
 MONGODB_URI=mongodb://localhost:27017/intervue-poll
 NODE_ENV=development
 ```
 
-4. Make sure MongoDB is running:
+Start MongoDB if it's not running:
 ```bash
-# On macOS with Homebrew
 brew services start mongodb-community
-
-# Or start manually
-mongod --dbpath /path/to/your/data/directory
 ```
 
-5. Start the backend server:
+Then:
 ```bash
 npm run dev
 ```
 
-The backend will run on `http://localhost:5000`
-
-### Frontend Setup
-
-1. Navigate to the frontend directory:
+**Frontend:**
 ```bash
 cd frontend
-```
-
-2. Install dependencies:
-```bash
 npm install
 ```
 
-3. Create a `.env` file (already created):
-```env
+Create `.env`:
+```
 VITE_SOCKET_URL=http://localhost:5000
 ```
 
-4. Start the development server:
+Then:
 ```bash
 npm run dev
 ```
 
-The frontend will run on `http://localhost:5173`
+Backend runs on `localhost:5000`, frontend on `localhost:5173`.
 
-## Usage
+## How to use
 
-### For Teachers
+**As a teacher:**
+1. Go to `localhost:5173`
+2. Pick "I'm a Teacher"
+3. Create a poll - add question, options, set time, pick correct answer
+4. Hit "Ask Question"
+5. Watch the votes roll in
 
-1. Open the app in your browser: `http://localhost:5173`
-2. Select "I'm a Teacher"
-3. Create a poll with question and options
-4. Set the time limit (30-120 seconds)
-5. Mark the correct answer
-6. Click "Ask Question" to start the poll
-7. View live results as students submit answers
-8. View participants and kick students if needed
-9. View poll history to see past results
-
-### For Students
-
-1. Open the app in a different browser/tab: `http://localhost:5173`
-2. Select "I'm a Student"
+**As a student:**
+1. Open in another tab/browser
+2. Pick "I'm a Student"
 3. Enter your name
-4. Wait for teacher to ask a question
-5. Select your answer and submit within the time limit
-6. View results after submission
-7. Wait for the next question
+4. Wait for a question, answer it, see results
 
-### Chat Feature
+Chat button is in the bottom right corner (💬).
 
-- Click the chat button (💬) in the bottom right
-- Send messages to communicate
-- Works for both teachers and students
+## Project layout
 
-## Key Features Explained
+```
+backend/
+  server.js          - entry point
+  config/database.js - mongo connection
+  models/            - Poll, Vote, Student, Message schemas
+  services/          - business logic
+  socket/            - socket.io handlers
 
-### State Recovery
-If you refresh the page during an active poll:
-- **Teacher**: Will see the current poll state and live results
-- **Student**: Will see the current question with correct remaining time
+frontend/
+  src/
+    components/      - Button, Card, Timer, ChatPopup, etc
+    hooks/           - useSocket, usePollTimer
+    pages/           - Teacher/, Student/, RoleSelection/
+    store/           - redux slices
+```
 
-### Timer Synchronization
-- If a student joins 20 seconds into a 60-second poll, they will see 40 seconds remaining
-- Timer is synchronized with the server time, not client time
-- Prevents time manipulation
+## Socket events (if you're curious)
 
-### Race Condition Protection
-- Database-level unique constraint prevents duplicate votes
-- Even if a student tries to submit multiple times, only the first vote counts
+Teacher stuff: `teacher:join`, `poll:create`, `student:kick`, `poll:history`
 
-### Resilience
-- Application recovers from temporary disconnections
-- State is persisted in MongoDB
-- Server is the source of truth for all data
+Student stuff: `student:join`, `vote:submit`
 
-## API Events (Socket.io)
+Both: `chat:message`, `chat:history`, `poll:completed`, `error`
 
-### Teacher Events
-- `teacher:join` - Join as teacher
-- `poll:create` - Create a new poll
-- `student:kick` - Remove a student
-- `poll:history` - Get poll history
+## Common issues
 
-### Student Events
-- `student:join` - Join as student with name
-- `vote:submit` - Submit vote for a poll
+**Can't connect to MongoDB?**
+- Check if it's running: `brew services list`
+- Double check your MONGODB_URI
 
-### Common Events
-- `chat:message` - Send a chat message
-- `chat:history` - Get chat history
-- `poll:completed` - Emitted when poll completes
-- `error` - Error notifications
+**Socket won't connect?**
+- Is the backend actually running on 5000?
+- Check VITE_SOCKET_URL in frontend .env
+- Look at browser console
 
-## Architecture Highlights
+**Port in use?**
+- Change PORT in backend .env
+- Update VITE_SOCKET_URL to match
 
-### Backend
-- **Service Layer**: Business logic separated from Socket handlers
-- **Models**: Mongoose schemas for data persistence
-- **Socket Handler**: Manages all real-time communication
-- **Database**: MongoDB for persistent storage
+## Maybe later
 
-### Frontend
-- **Redux Toolkit**: Centralized state management
-- **Custom Hooks**: `useSocket` for Socket.io, `usePollTimer` for synchronized timing
-- **Component-based**: Reusable UI components
-- **Responsive Design**: Works on desktop and mobile
+- Actual auth
+- Multiple classrooms
+- Export results to CSV or something
+- Better analytics
+- Mobile app?
 
-## Development Notes
+---
 
-- The system uses **MongoDB** for persistence - make sure it's running
-- Socket.io handles all real-time communication
-- Redux Toolkit manages application state
-- Custom hooks encapsulate complex logic
-- Clean separation of concerns throughout
-
-## Troubleshooting
-
-1. **MongoDB Connection Error**:
-   - Ensure MongoDB is running: `brew services list`
-   - Check the MONGODB_URI in `.env`
-
-2. **Socket Connection Issues**:
-   - Verify backend is running on port 5000
-   - Check VITE_SOCKET_URL in frontend `.env`
-   - Check browser console for connection errors
-
-3. **Port Already in Use**:
-   - Change PORT in backend `.env`
-   - Update VITE_SOCKET_URL in frontend `.env`
-
-## Future Enhancements
-
-- User authentication
-- Multiple rooms/sessions
-- Export poll results
-- Advanced analytics
-- Mobile app
-- Deployment guides
-
-## License
-
-ISC
+ISC License
