@@ -37,45 +37,56 @@ const StudentPoll = ({ socket }) => {
 
   return (
     <div className="min-h-screen px-5 py-10" style={{ backgroundColor: '#F2F2F2' }}>
-      <div className="flex justify-between items-center max-w-3xl mx-auto mb-6">
-        <h3 className="text-xl font-semibold" style={{ color: '#373737' }}>Question 1</h3>
-        <Timer remainingTime={remainingTime} />
-      </div>
-
-      <Card className="max-w-3xl mx-auto mb-8" style={{ backgroundColor: '#6E6E6E', padding: '20px' }}>
-        <p className="text-white text-base leading-relaxed font-medium">{activePoll.question}</p>
-      </Card>
-
-      <div className="max-w-3xl mx-auto flex flex-col gap-4 mb-8">
-        {activePoll.options.map((option, index) => (
-          <Card
-            key={index}
-            className={`cursor-pointer transition-all duration-300 border-2 ${
-              hasVoted ? 'opacity-60 cursor-not-allowed' : 'hover:-translate-y-0.5'
-            }`}
-            style={{
-              borderColor: selectedOption === index ? '#7765DA' : '#E5E7EB',
-              backgroundColor: selectedOption === index ? '#F3F0FF' : 'white'
-            }}
-            onClick={() => handleOptionSelect(index)}
-          >
-            <div className="flex items-center gap-3">
-              <span className={`text-xl`} style={{ color: selectedOption === index ? '#7765DA' : '#6E6E6E' }}>
-                ●
-              </span>
-              <span className="text-base font-medium" style={{ color: '#373737' }}>{option.text}</span>
-            </div>
-          </Card>
-        ))}
-      </div>
-
       <div className="max-w-3xl mx-auto">
-        <Button
-          onClick={handleSubmit}
-          disabled={selectedOption === null || hasVoted || remainingTime === 0}
+        <div className="flex items-center gap-4 mb-6">
+          <h3 className="text-2xl font-bold" style={{ color: '#373737' }}>Question 1</h3>
+          <Timer remainingTime={remainingTime} />
+        </div>
+
+        {/* Combined Card with Question and Options */}
+        <div 
+          className="rounded-2xl border-2 overflow-hidden mb-8"
+          style={{ borderColor: '#7765DA', backgroundColor: 'white' }}
         >
-          Submit
-        </Button>
+          {/* Question Header */}
+          <div className="p-5" style={{ backgroundColor: '#6E6E6E' }}>
+            <p className="text-white text-base leading-relaxed font-medium">{activePoll.question}</p>
+          </div>
+
+          {/* Options */}
+          <div className="p-4 flex flex-col gap-3">
+            {activePoll.options.map((option, index) => (
+              <div
+                key={index}
+                className={`flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all duration-300 border-2 ${
+                  hasVoted ? 'opacity-60 cursor-not-allowed' : 'hover:border-purple-400'
+                }`}
+                style={{
+                  backgroundColor: '#F2F2F2',
+                  borderColor: selectedOption === index ? '#7765DA' : 'transparent'
+                }}
+                onClick={() => handleOptionSelect(index)}
+              >
+                <span 
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-semibold flex-shrink-0"
+                  style={{ backgroundColor: selectedOption === index ? '#7765DA' : '#6E6E6E' }}
+                >
+                  {index + 1}
+                </span>
+                <span className="text-base font-medium" style={{ color: '#373737' }}>{option.text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex justify-end">
+          <Button
+            onClick={handleSubmit}
+            disabled={selectedOption === null || hasVoted || remainingTime === 0}
+          >
+            Submit
+          </Button>
+        </div>
       </div>
 
       <div 

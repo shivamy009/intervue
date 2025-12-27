@@ -35,57 +35,70 @@ const TeacherDashboard = ({ socket, onShowHistory }) => {
 
   return (
     <div className="min-h-screen px-5 py-10" style={{ backgroundColor: '#F2F2F2' }}>
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-3xl mx-auto">
         <div className="flex justify-end mb-8">
           <Button variant="outline" onClick={handleShowHistory}>
             👁️ View Poll history
           </Button>
         </div>
 
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold" style={{ color: '#373737' }}>Question</h2>
+        <div className="flex items-center gap-4 mb-6">
+          <h2 className="text-2xl font-bold" style={{ color: '#373737' }}>Question</h2>
           <Timer remainingTime={remainingTime} />
         </div>
         
-        <Card className="mb-8" style={{ backgroundColor: '#6E6E6E', padding: '20px' }}>
-          <p className="text-white text-base leading-relaxed font-medium">{activePoll.question}</p>
-        </Card>
+        {/* Combined Card with Question and Results */}
+        <div 
+          className="rounded-2xl border-2 overflow-hidden mb-8"
+          style={{ borderColor: '#7765DA', backgroundColor: 'white' }}
+        >
+          {/* Question Header */}
+          <div className="p-5" style={{ backgroundColor: '#6E6E6E' }}>
+            <p className="text-white text-base leading-relaxed font-medium">{activePoll.question}</p>
+          </div>
 
-        <div className="mb-8">
-          {totalVotes === 0 && (
-            <p className="text-center text-sm mb-6" style={{ color: '#6E6E6E' }}>
-              Waiting for students to submit their answers...
-            </p>
-          )}
-          {activePoll.options.map((option, index) => {
-            const result = results?.results?.[index];
-            const votes = result?.votes || 0;
-            const percentage = result?.percentage || 0;
-            
-            return (
-              <div key={index} className="mb-5">
-                <div className="flex justify-between items-center mb-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg" style={{ color: '#7765DA' }}>●</span>
-                    <span className="text-base font-medium" style={{ color: '#373737' }}>{option.text}</span>
-                  </div>
-                  <span className="text-base font-semibold" style={{ color: '#373737' }}>{percentage}%</span>
-                </div>
-                <div className="h-10 rounded-lg overflow-hidden" style={{ backgroundColor: '#E5E7EB' }}>
-                  <div
-                    className="h-full transition-all duration-500 rounded-lg flex items-center px-3"
-                    style={{ 
-                      width: `${percentage}%`,
-                      backgroundColor: '#7765DA',
-                      minWidth: percentage > 0 ? '40px' : '0'
-                    }}
+          {/* Results */}
+          <div className="p-4 flex flex-col gap-3">
+            {totalVotes === 0 && (
+              <p className="text-center text-sm py-4" style={{ color: '#6E6E6E' }}>
+                Waiting for students to submit their answers...
+              </p>
+            )}
+            {activePoll.options.map((option, index) => {
+              const result = results?.results?.[index];
+              const votes = result?.votes || 0;
+              const percentage = result?.percentage || 0;
+              
+              return (
+                <div key={index} className="flex items-center gap-3">
+                  <div 
+                    className="flex-1 h-12 rounded-xl overflow-hidden relative"
+                    style={{ backgroundColor: '#F2F2F2' }}
                   >
-                    {percentage > 0 && <span className="text-white text-sm font-medium">{option.text}</span>}
+                    {/* Background with text always visible */}
+                    <div className="absolute inset-0 flex items-center gap-3 px-3 z-10">
+                      <span 
+                        className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-semibold flex-shrink-0"
+                        style={{ backgroundColor: '#7765DA' }}
+                      >
+                        {index + 1}
+                      </span>
+                      <span className="text-sm font-medium" style={{ color: '#373737' }}>{option.text}</span>
+                    </div>
+                    {/* Purple fill overlay */}
+                    <div
+                      className="h-full transition-all duration-500 rounded-xl"
+                      style={{ 
+                        width: `${percentage}%`,
+                        backgroundColor: '#7765DA'
+                      }}
+                    />
                   </div>
+                  <span className="text-base font-semibold w-12 text-right" style={{ color: '#373737' }}>{percentage}%</span>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
 
         <div className="flex justify-center mb-4">
