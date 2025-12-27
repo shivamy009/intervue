@@ -29,115 +29,33 @@ The cool part: if you refresh during a poll, you don't lose anything. Students w
 
 ## Running it locally
 
-You'll need Node 16+ and MongoDB running.
+Need Node 16+ and MongoDB.
 
 **Backend:**
-```bash
-cd backend
-npm install
-```
 
-Create `.env`:
+`.env`:
 ```
 PORT=5000
 MONGODB_URI=mongodb://localhost:27017/intervue-poll
-NODE_ENV=development
 ```
 
-Start MongoDB if it's not running:
 ```bash
-brew services start mongodb-community
-```
-
-Then:
-```bash
+cd backend
+npm install
 npm run dev
 ```
 
 **Frontend:**
-```bash
-cd frontend
-npm install
-```
 
-Create `.env`:
+`.env`:
 ```
 VITE_SOCKET_URL=http://localhost:5000
 ```
 
-Then:
 ```bash
+cd frontend
+npm install
 npm run dev
 ```
 
-Backend runs on `localhost:5000`, frontend on `localhost:5173`.
-
-## How to use
-
-**As a teacher:**
-1. Go to `localhost:5173`
-2. Pick "I'm a Teacher"
-3. Create a poll - add question, options, set time, pick correct answer
-4. Hit "Ask Question"
-5. Watch the votes roll in
-
-**As a student:**
-1. Open in another tab/browser
-2. Pick "I'm a Student"
-3. Enter your name
-4. Wait for a question, answer it, see results
-
-Chat button is in the bottom right corner (💬).
-
-## Project layout
-
-```
-backend/
-  server.js          - entry point
-  config/database.js - mongo connection
-  models/            - Poll, Vote, Student, Message schemas
-  services/          - business logic
-  socket/            - socket.io handlers
-
-frontend/
-  src/
-    components/      - Button, Card, Timer, ChatPopup, etc
-    hooks/           - useSocket, usePollTimer
-    pages/           - Teacher/, Student/, RoleSelection/
-    store/           - redux slices
-```
-
-## Socket events (if you're curious)
-
-Teacher stuff: `teacher:join`, `poll:create`, `student:kick`, `poll:history`
-
-Student stuff: `student:join`, `vote:submit`
-
-Both: `chat:message`, `chat:history`, `poll:completed`, `error`
-
-## Common issues
-
-**Can't connect to MongoDB?**
-- Check if it's running: `brew services list`
-- Double check your MONGODB_URI
-
-**Socket won't connect?**
-- Is the backend actually running on 5000?
-- Check VITE_SOCKET_URL in frontend .env
-- Look at browser console
-
-**Port in use?**
-- Change PORT in backend .env
-- Update VITE_SOCKET_URL to match
-
-## Maybe later
-
-- Actual auth
-- Multiple classrooms
-- Export results to CSV or something
-- Better analytics
-- Mobile app?
-
----
-
-ISC License
+Open `localhost:5173`
