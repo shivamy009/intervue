@@ -54,8 +54,16 @@ const Student = () => {
 
   // If there's an active poll, show it
   if (activePoll && activePoll.status === 'active') {
-    // If student has voted, show results
+    // If student has voted, show results (or loading if results not yet received)
     if (hasVoted) {
+      if (!results) {
+        return (
+          <div className="flex flex-col items-center justify-center min-h-screen" style={{ backgroundColor: '#F2F2F2' }}>
+            <div className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin mb-4" style={{ borderColor: '#7765DA', borderTopColor: 'transparent' }}></div>
+            <p className="text-lg font-medium" style={{ color: '#373737' }}>Loading results...</p>
+          </div>
+        );
+      }
       return <StudentResults socket={socket} />;
     }
     // Otherwise show poll to vote
