@@ -42,7 +42,7 @@ MONGODB_URI=mongodb://localhost:27017/intervue-poll
 ```bash
 cd backend
 npm install
-npm run dev
+npm start
 ```
 
 **Frontend:**
