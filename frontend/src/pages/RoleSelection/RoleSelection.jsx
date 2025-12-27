@@ -40,7 +40,7 @@ const RoleSelection = () => {
         >
           <h2 className="text-xl font-semibold mb-3" style={{ color: '#373737' }}>I'm a Student</h2>
           <p className="text-sm leading-relaxed" style={{ color: '#6E6E6E' }}>
-            Submit answers and view live poll results in real-time. Participate in interactive polls and see how your responses compare with classmates.
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
           </p>
         </Card>
 
@@ -56,7 +56,7 @@ const RoleSelection = () => {
         >
           <h2 className="text-xl font-semibold mb-3" style={{ color: '#373737' }}>I'm a Teacher</h2>
           <p className="text-sm leading-relaxed" style={{ color: '#6E6E6E' }}>
-            Create and manage polls, ask questions, and monitor student responses in real-time. View analytics and manage participants.
+            Submit answers and view live poll results in real-time.
           </p>
         </Card>
       </div>
