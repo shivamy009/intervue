@@ -15,7 +15,7 @@ const Button = ({ children, onClick, variant = 'primary', disabled = false, type
       return { backgroundColor: '#7765DA', boxShadow: disabled ? 'none' : '0 4px 6px -1px rgba(119, 101, 218, 0.3)' };
     }
     if (variant === 'outline') {
-      return { borderColor: '#7765DA', color: '#7765DA' };
+      return { borderColor: '#7765DA', color: '#7765DA', backgroundColor: 'transparent' };
     }
     return {};
   };
@@ -25,7 +25,7 @@ const Button = ({ children, onClick, variant = 'primary', disabled = false, type
       return { backgroundColor: '#5767D0' };
     }
     if (variant === 'outline' && !disabled) {
-      return { backgroundColor: '#7765DA' };
+      return { backgroundColor: '#7765DA', color: 'white', borderColor: '#7765DA' };
     }
     return {};
   };

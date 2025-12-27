@@ -10,7 +10,7 @@ import { setSelectedOption, setVoted } from '../../store/studentSlice';
 const StudentPoll = ({ socket }) => {
   const dispatch = useDispatch();
   const { activePoll } = useSelector((state) => state.poll);
-  const { selectedOption, hasVoted } = useSelector((state) => state.student);
+  const { selectedOption, hasVoted, name } = useSelector((state) => state.student);
   const { students } = useSelector((state) => state.teacher);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const remainingTime = usePollTimer(activePoll);
@@ -91,6 +91,8 @@ const StudentPoll = ({ socket }) => {
         onClose={() => setIsModalOpen(false)}
         students={students}
         socket={socket}
+        userRole="student"
+        userName={name}
       />
     </div>
   );

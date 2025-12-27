@@ -42,7 +42,10 @@ const TeacherDashboard = ({ socket, onShowHistory }) => {
           </Button>
         </div>
 
-        <h2 className="text-lg font-semibold mb-4" style={{ color: '#373737' }}>Question</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-semibold" style={{ color: '#373737' }}>Question</h2>
+          <Timer remainingTime={remainingTime} />
+        </div>
         
         <Card className="mb-8" style={{ backgroundColor: '#6E6E6E', padding: '20px' }}>
           <p className="text-white text-base leading-relaxed font-medium">{activePoll.question}</p>
@@ -118,6 +121,8 @@ const TeacherDashboard = ({ socket, onShowHistory }) => {
         onClose={() => setIsModalOpen(false)}
         students={students}
         socket={socket}
+        userRole="teacher"
+        userName="Teacher"
       />
     </div>
   );

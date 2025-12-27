@@ -7,6 +7,7 @@ import ParticipantModal from '../../components/ParticipantModal';
 const StudentResults = ({ socket }) => {
   const { results } = useSelector((state) => state.poll);
   const { students } = useSelector((state) => state.teacher);
+  const { name } = useSelector((state) => state.student);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   if (!results) {
@@ -64,6 +65,8 @@ const StudentResults = ({ socket }) => {
         onClose={() => setIsModalOpen(false)}
         students={students}
         socket={socket}
+        userRole="student"
+        userName={name}
       />
     </div>
   );
