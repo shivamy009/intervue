@@ -40,7 +40,13 @@ const Teacher = () => {
   }, [socket]);
 
   if (!isConnected) {
-    return <div className="flex items-center justify-center min-h-screen text-lg text-gray-800">Connecting...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen" style={{ backgroundColor: '#F2F2F2' }}>
+        <div className="w-14 h-14 border-4 rounded-full animate-spin mb-6" style={{ borderColor: '#7765DA', borderTopColor: 'transparent' }} />
+        <h3 className="text-xl font-semibold mb-2" style={{ color: '#373737' }}>Joining session</h3>
+        <p className="text-sm text-center max-w-xs" style={{ color: '#6E6E6E' }}>This may take a moment — establishing connection with the server.</p>
+      </div>
+    );
   }
 
   return (
